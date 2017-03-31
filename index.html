@@ -27,15 +27,17 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$.ajax({
-				type: "GET",
-				url: "http://api.openweathermap.org/data/2.5/weather?q=chicago&appid=6aa0bdb1f586c5630d60b6237dfce45c",
-				dataType: "jsonp",
-				jsonpCallback: "resultHandler"
+				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:47906&startdate=2010-05-01&enddate=2010-05-01",
+				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
+				success: function(result) {
+					resultHandler(result);
+				}
 			});
 		});
 
 		function resultHandler(result) {
-			var p = $("<p>Today's weather in <b>" + result.name + "</b>" + " is: <b>" + result.weather[0].description + "</b></p>");
+			console.log(result);
+			var p = $("<p>The date is<b>" + result.results[0].date + "</b>" + " datatype is: <b>" + result.results[0].datatype + "</b></p>");
 			$('body').append(p);
 		}
 
