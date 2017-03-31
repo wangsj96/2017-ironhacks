@@ -1,14 +1,27 @@
-<!--a web page for users to choose the best vegetable market by comparing several different attribtues-->
+<!--a web page for users to choose the best vegetable market by comparing several different attribtues Ex. freshness scale, price, list of vendors, integration with Google Maps,distance, comparison of prices etc-->
 </!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title>Great Lafayette market evaluation</title>
 	<style>
+	h1{
+		text-align:center;
+	}
       #map {
-        width: 100%;
+        width: 40%;
         height: 400px;
         background-color: grey;
+        float: left;
+        
+        margin-left: 5%;
+      }
+      #data{
+      	width: 40%;
+      	text-align: center;
+      	float: right;
+      	border: 1px solid black;
+      	margin-right: 5%;
       }
     </style>
 </head>
@@ -21,14 +34,18 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDptucDbUWqNmt1j5ZbHEXuhghiCCm8UiY&callback=initMap">
 </script>
 <body>
-	
+	<h1>Choose any market on the map for more details</h1>
+	<!--the map div include the google map-->
 	<div id="map"></div>
+	<!--the data div would show data and information about each market and include d3 in this div-->
+	<div id='data'></div>
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$.ajax({
-				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:47906&startdate=2010-05-01&enddate=2010-05-01",
+				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:47906&startdate=2017-03-01&enddate=2017-03-01",
 				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
+				//i am not for this part whether is correct and efficient if there is any more efficient way to manipulate data in postback function, please comment! Really appreciate!
 				success: function(result) {
 					resultHandler(result);
 				}
@@ -36,9 +53,9 @@
 		});
 
 		function resultHandler(result) {
-			console.log(result);
-			var p = $("<p>The date is<b>" + result.results[0].date + "</b>" + " datatype is: <b>" + result.results[0].datatype + "</b></p>");
-			$('body').append(p);
+			//console.log(result);
+			var p = $("<p>The date is <b>" + result.results[0].date + "</b>" + " datatype is: <b>" + result.results[0].datatype + "</b></p>");
+			$('#data').append(p);
 		}
 
 		function initMap(){
