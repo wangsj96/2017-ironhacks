@@ -42,6 +42,10 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
+			getWeather();
+			getMarkets('47906');
+		});
+		function getWeather() {
 			$.ajax({
 				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:47906&startdate=2017-03-01&enddate=2017-03-01",
 				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
@@ -50,7 +54,7 @@
 					resultHandler(result);
 				}
 			});
-		});
+		}
 
 		function resultHandler(result) {
 			//console.log(result);
@@ -58,17 +62,53 @@
 			$('#data').append(p);
 		}
 
+		//get local markets
+		function getMarkets(zip) {
+			$.ajax({
+				type: "GET",
+        		contentType: "application/json; charset=utf-8",
+				url: "https://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+				dataType: 'jsonp',
+        		jsonpCallback: 'getMarketID'
+			});
+		}
+
+		function getMarketID(result) {
+			//console.log(result);
+			
+		}
+
+		//google map 
+		var geocoder;
+		var map;
 		function initMap(){
-			var mapDiv = document.getElementById('map');
-			var map = new google.maps.Map(mapDiv, {
-				center: {lat: 40.4237, lng: -86.9212},
-				zoom: 12});
+			geocoder = new google.maps.Geocoder();
+			var myOptions = {
+			    zoom: 12,
+			    center: codeAddress('47907'),
+			}
+			map = new google.maps.Map(document.getElementById("map"), myOptions);
 			var marker = new google.maps.Marker({ //Line 1
 				position: {lat: 40.4237, lng: -86.9212}, //Line2: Location to be highlighted
 				map: map,//Line 3: Reference to map object
 				title: 'Purdue University' //Line 4: Title to be given
 			})
-		};	
+		};
+		function codeAddress(zipCode) {
+		    geocoder.geocode( { 'address': zipCode}, function(results, status) {
+		      if (status == google.maps.GeocoderStatus.OK) {
+		        //Got result, center the map and put it out there
+		        map.setCenter(results[0].geometry.location);
+		        var marker = new google.maps.Marker({
+	            map: map,
+	            position: results[0].geometry.location,
+	            title: 'Your position'
+	        });
+		      } else {
+		        alert("Geocode was not successful for the following reason: " + status);
+		      }
+		    });
+		  }
 	</script>
 </body>
 </html>
