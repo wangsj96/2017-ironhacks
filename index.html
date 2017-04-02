@@ -63,6 +63,7 @@
 		}
 
 		//get local markets
+		var markets;
 		function getMarkets(zip) {
 			$.ajax({
 				type: "GET",
@@ -73,9 +74,16 @@
 			});
 		}
 
+		//get the market ids from the json response.
 		function getMarketID(result) {
-			//console.log(result);
-			
+			//console.log(result.results);
+			var markets = new Array;
+			var counter = 0;
+			for(id in result.results) {
+				markets[counter] = result.results[counter].id;
+				counter ++;
+			}
+			console.log(markets);
 		}
 
 		//google map 
@@ -99,11 +107,20 @@
 		      if (status == google.maps.GeocoderStatus.OK) {
 		        //Got result, center the map and put it out there
 		        map.setCenter(results[0].geometry.location);
-		        var marker = new google.maps.Marker({
-	            map: map,
-	            position: results[0].geometry.location,
-	            title: 'Your position'
-	        });
+			    var marker = new google.maps.Marker({
+		            map: map,
+		            position: results[0].geometry.location,
+		            title: 'Your position'
+		        });
+		        var infowindow = new google.maps.InfoWindow({
+				    content: "<span>Your position</span>"
+				});
+				google.maps.event.addListener(marker, 'mouseover', function() {
+				  	infowindow.open(map,marker);
+				});
+				google.maps.event.addListener(marker, 'mouseout', function() {
+				  	infowindow.close(map,marker);
+				});
 		      } else {
 		        alert("Geocode was not successful for the following reason: " + status);
 		      }
