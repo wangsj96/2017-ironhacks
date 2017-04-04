@@ -35,6 +35,10 @@
 </script>
 <body>
 	<h1>Choose any market on the map for more details</h1>
+
+		<label for="zipcode">Enter your zipcode here: </label>
+		<input type="text" id='zipcode' name="zipcode" />
+		<button type="button" id="button">get your markets</button>
 	<!--the map div include the google map-->
 	<div id="map"></div>
 	<!--the data div would show data and information about each market and include d3 in this div-->
@@ -42,12 +46,20 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			getWeather();
-			getMarkets('47906');
+			
+			$("#button").click(function() {
+				var zip = $("#zipcode").val();
+				initMap(zip);
+				getWeather(zip);
+				getMarkets(zip);
+			});
+
 		});
-		function getWeather() {
+
+
+		function getWeather(zip) {
 			$.ajax({
-				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:47906&startdate=2017-03-01&enddate=2017-03-01",
+				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:"+ zip +"&startdate=2017-03-01&enddate=2017-03-01",
 				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
 				//i am not for this part whether is correct and efficient if there is any more efficient way to manipulate data in postback function, please comment! Really appreciate!
 				success: function(result) {
@@ -64,6 +76,8 @@
 
 		//get local markets
 		var markets;
+		var address = new Array;
+
 		function getMarkets(zip) {
 			$.ajax({
 				type: "GET",
@@ -77,23 +91,40 @@
 		//get the market ids from the json response.
 		function getMarketID(result) {
 			//console.log(result.results);
-			var markets = new Array;
+			markets = new Array;
 			var counter = 0;
 			for(id in result.results) {
 				markets[counter] = result.results[counter].id;
 				counter ++;
 			}
-			console.log(markets);
+			//console.log(markets);
+			//get market detail
+			for(var i = 0; i < markets.length; i ++) {
+				$.ajax({
+			        type: "GET",
+			        contentType: "application/json; charset=utf-8",
+			        // submit a get request to the restful service mktDetail.
+			        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + markets[i],
+			        dataType: 'jsonp',
+		        	jsonpCallback: 'createMarker'
+		    	});
+			};
+		}
+		//iterate through the JSON result object.
+		function createMarker(detailresults) {
+		    var counter = address.length;
+			address[counter] = detailresults.marketdetails.Address;
+			$('#data').append(address +  "<br />");
 		}
 
 		//google map 
 		var geocoder;
 		var map;
-		function initMap(){
+		function initMap(zip){
 			geocoder = new google.maps.Geocoder();
 			var myOptions = {
 			    zoom: 12,
-			    center: codeAddress('47907'),
+			    center: codeAddress(zip),
 			}
 			map = new google.maps.Map(document.getElementById("map"), myOptions);
 			var marker = new google.maps.Marker({ //Line 1
