@@ -5,7 +5,15 @@
 	<meta charset="utf-8">
 	<title>Great Lafayette market evaluation</title>
 	<style>
+	/*html { 
+	  background: url(back.jpg) no-repeat center center fixed; 
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  -o-background-size: cover;
+	  background-size: cover;
+	}*/
 	h1{
+		display: block;
 		text-align:center;
 	}
       #map {
@@ -22,6 +30,7 @@
       	float: right;
       	border: 1px solid black;
       	margin-right: 5%;
+      	
       }
     </style>
 </head>
@@ -33,6 +42,7 @@
 <script async defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDptucDbUWqNmt1j5ZbHEXuhghiCCm8UiY&callback=initMap">
 </script>
+<script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
 <body>
 	<h1>Choose any market on the map for more details</h1>
 
@@ -46,10 +56,10 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			initMap();
 			$("#button").click(function() {
 				var zip = $("#zipcode").val();
-				initMap(zip);
+				codeAddress(zip);
 				getWeather(zip);
 				getMarkets(zip);
 			});
@@ -120,11 +130,12 @@
 		//google map 
 		var geocoder;
 		var map;
-		function initMap(zip){
+		function initMap(){
+
 			geocoder = new google.maps.Geocoder();
 			var myOptions = {
 			    zoom: 12,
-			    center: codeAddress(zip),
+			    center: {lat: Number(geoplugin_latitude()), lng: Number(geoplugin_longitude())}
 			}
 			map = new google.maps.Map(document.getElementById("map"), myOptions);
 			var marker = new google.maps.Marker({ //Line 1
