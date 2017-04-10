@@ -41,9 +41,10 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			initMap();
+
 			var zipcode = window.location.search;
 			zipcode = zipcode.substring(1);
+			zipcode = zipcode.substring( zipcode.indexOf('=') + 1 );
 			console.log(zipcode);
 			getWeather(zipcode);
 			getMarkets(zipcode);
@@ -109,6 +110,45 @@
 			address[counter] = detailresults.marketdetails.Address;
 			$('#data').append(address +  "<br />");
 		}
+		var geocoder;
+  		var map;
+		function initMap(zip){
+  			geocoder = new google.maps.Geocoder();
+  			var myOptions = {
+  			    zoom: 12,
+  			    center: codeAddress(zip)
+  			}
+  			map = new google.maps.Map(document.getElementById("map"), myOptions);
+  			var marker = new google.maps.Marker({ //Line 1
+ 				position: {lat: 40.4237, lng: -86.9212}, //Line2: Location to be highlighted
+ 				map: map,//Line 3: Reference to map object
+ 				title: 'Purdue University' //Line 4: Title to be given
+ 			})
+ 		};
+ 		function codeAddress(zipCode) {
+ 		    geocoder.geocode( { 'address': zipCode}, function(results, status) {
+ 		      if (status == google.maps.GeocoderStatus.OK) {
+ 		        //Got result, center the map and put it out there
+ 		        map.setCenter(results[0].geometry.location);
+ 			    var marker = new google.maps.Marker({
+ 		            map: map,
+ 		            position: results[0].geometry.location,
+ 		            title: 'Your position'
+ 		        });
+ 		        var infowindow = new google.maps.InfoWindow({
+ 				    content: "<span>Your position</span>"
+ 				});
+ 				google.maps.event.addListener(marker, 'mouseover', function() {
+ 				  	infowindow.open(map,marker);
+ 				});
+ 				google.maps.event.addListener(marker, 'mouseout', function() {
+ 				  	infowindow.close(map,marker);
+ 				});
+ 		      } else {
+ 		        alert("Geocode was not successful for the following reason: " + status);
+ 		      }
+ 		    });
+ 		  }
 	</script>
 </body>
 
