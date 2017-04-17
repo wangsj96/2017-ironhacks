@@ -32,19 +32,42 @@
       #content label{
       	font-size: 20px;
       }
+      #error{
+      	color:red;
+      }
     </style>
 </head>
 
 <body>
 	<div id="content">
 		<h1>Great Lafayette Markets</h1>
-		<form action="market.html" method="get">
+		<form action="market.html" method="get" onsubmit="return validation()">
 			<label for="zipcode">Enter your zipcode here: </label><br />
-			<input type="text" id='zipcode' name="zipcode" />
-			<button type="submit" id="button">get your markets</button>
+			<input type="text" id='zipcode' name="zipcode" required/>
+			<button type="submit" id="button">get your markets</button><br />
+			<span id="error"></span>
 		</form>
 	</div>
+<script type="text/javascript">
+	function validation() {
+		var x, text;
 
+	    // Get the value of the input field with id="zipcode"
+	    x = document.getElementById("zipcode").value;
+	    var regex = /^[4][7][9][0][0-9]{1}/g;
+	    var res = regex.test(x);
+	    if(isNaN(x)) {
+	    	text = 'Please enter a zip code';
+	    }
+	    else if (!res) {
+	        text = "Please enter a valid lafayette area zip code";
+	    } else {
+	        text = "Input OK";
+	    }
+	    document.getElementById("error").innerHTML = text;
+	    return res;
+	}
+</script>
 	 
 </body>
 </html>
