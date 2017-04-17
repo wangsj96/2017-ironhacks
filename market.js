@@ -10,7 +10,8 @@
 		
 		function getWeather(zip) {
 			$.ajax({
-				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&locationid=ZIP:"+ zip +"&startdate=2017-03-01&enddate=2017-03-01",
+				//url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/datatypes?datasetid=GHCND&locationid=ZIP:47906&startdate=2017-04-09&enddate=2017-04-09",
+				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypes=TOBS&locationid=ZIP:47906&startdate=2017-04-15&enddate=2017-04-15",
 				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
 				//i am not for this part whether is correct and efficient if there is any more efficient way to manipulate data in postback function, please comment! Really appreciate!
 				success: function(result) {
@@ -21,8 +22,15 @@
 
 		function resultHandler(result) {
 			//console.log(result);
-			var p = $("<p>The date is <b>" + result.results[0].date + "</b>" + " datatype is: <b>" + result.results[0].datatype + "</b></p>");
-			$('#data').append(p);
+			for(var i = 0; i < result.results.length; i ++){
+				if(result.results[i].datatype == 'TOBS') {
+					console.log(result.results[i].value);
+					var temp = result.results[i].value.toString().slice(0, -1) + '.' + result.results[i].value.toString().slice(-1);
+					var p = $("<p>Today's temperature is <b>" + temp + "°C</b></p>");
+					break;
+				}
+			}
+			$('#weather').append(p);
 		}
 
 		//get local markets

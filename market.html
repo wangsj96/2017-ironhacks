@@ -9,7 +9,7 @@
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script async defer
+<script defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDptucDbUWqNmt1j5ZbHEXuhghiCCm8UiY&callback=initMap">
 </script>
 <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
@@ -38,10 +38,11 @@
 	<!--the map div include the google map-->
 	<div id="map"></div>
 	<!--the data div would show data and information about each market and include d3 in this div-->
-	<div id='data'></div>
+	<div id='data'>
+	<div id='weather'></div>
 	<!--a div containg table to show markets around user-->
 	<div id="markets"></div>
-	
+	</div>
 </body>
 
 </html>
