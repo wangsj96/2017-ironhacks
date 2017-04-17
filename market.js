@@ -9,9 +9,14 @@
 		});
 		
 		function getWeather(zip) {
+			//get today's date
+			var today = new Date();
+			//change date to correct format
+			function addZ(n){return n<10? '0'+n:''+n;}
+			var date = today.getFullYear()+'-'+(addZ(today.getMonth() + 1))+'-'+ (addZ(today.getDate() - 2));
 			$.ajax({
 				//url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/datatypes?datasetid=GHCND&locationid=ZIP:47906&startdate=2017-04-09&enddate=2017-04-09",
-				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypes=TOBS&locationid=ZIP:47906&startdate=2017-04-15&enddate=2017-04-15",
+				url: "https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypes=TOBS&locationid=ZIP:47906&startdate="+ date +"&enddate=" + date,
 				headers: {token: 'kdBkZEmRPolVnxmJgdQQxthkOzoGtjaE'},
 				//i am not for this part whether is correct and efficient if there is any more efficient way to manipulate data in postback function, please comment! Really appreciate!
 				success: function(result) {
@@ -24,7 +29,7 @@
 			//console.log(result);
 			for(var i = 0; i < result.results.length; i ++){
 				if(result.results[i].datatype == 'TOBS') {
-					console.log(result.results[i].value);
+					//console.log(result.results[i].value);
 					var temp = result.results[i].value.toString().slice(0, -1) + '.' + result.results[i].value.toString().slice(-1);
 					var p = $("<p>Today's temperature is <b>" + temp + "°C</b></p>");
 					break;
