@@ -13,7 +13,8 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDptucDbUWqNmt1j5ZbHEXuhghiCCm8UiY&callback=initMap">
 </script>
 <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
-<script type="text/javascript" src="market.js"></script>
+<script type="text/javascript" src="js/market.js"></script>
+<script type="text/javascript" src='js/radarChart.js'></script>
 <style type="text/css">
 	#map {
 		margin-top: 50px;
@@ -54,7 +55,9 @@
 	<div id='data'>
 		<div id='weather'></div>
 		<!--a div containg table to show markets around user-->
-		<div id="markets"></div>
+		<div id="markets">
+			<div class="radarChart"></div>
+		</div>
 	</div>
 </body>
 

@@ -78,7 +78,6 @@
 
 		//get local markets
 		var markets;
-		var markersArray = [];
 		//var counter = 0;
 
 		function getMarkets(zip) {
@@ -143,11 +142,8 @@
 								//console.log(lat+','+lng);
 								var marker = new google.maps.Marker({
 				 		            map: map,
-				 		            position: {lat: lat, lng: lng},
-				 		            id: markets[n].id
+				 		            position: {lat: lat, lng: lng}
 				 		    	});
-				 		    	markersArray.push(marker);
-				 		    	var index = markersArray.length;
 				 		    	var infowindow = new google.maps.InfoWindow({
 				 				    content: markets[n].name,
 				 				    disableAutoPan: true
@@ -156,21 +152,19 @@
 				 				google.maps.event.addListener(marker, 'mouseover', function() {
 				 				  	infowindow.open(map,marker);
 				 				});
-				 				//i do not know why click listener is not working
-				 				google.maps.event.addListener(marker, 'click', (function() {
-							        clickMarkerEvent(index);
-							    });
 				 				//infowindow.open(map,marker);
 				 				google.maps.event.addListener(marker, 'mouseout', function() {
 				 				  	infowindow.close(map,marker);
 				 				});
-				 				//console.log(markersArray);
 		        				break;
 		        			}
 		        		}
 		        	}
 		    	});
 			}
+		}
+		function log() {
+			console.log(markets[1].link);
 		}
 		//initiate array with several related fields
 		function Create2DArray(rows) {
@@ -181,68 +175,6 @@
 		  }
 
 		  return arr;
-		}
-
-		//when click change the content of div#markets, all these are not working
-		function clickMarkerEvent(index) {
-			/*console.log(markersArray);
-			var infowindow = new google.maps.InfoWindow({
-				content: "clicked clicked clicked",
-				maxWidth: 200
-			});*/
-
-			//get the id
-			var id = markersArray[index].id;
-			var time,name,products,address,distance;
-			for (var i = 0; i < markets.length; i ++) {
-				if(markets[i].id == id) {
-					name = markets[i].name;
-					address = markets[i].address;
-					products = markets[i].category;
-					time = markets[i].time;
-					distance = markets[i].distance;
-					break;
-				}
-			}
-			//empty the current content
-			$("#markets").empty();
-			var list = $("<ul></ul>");
-			list.append("<li>Name: " + name +"</li><li>Address: " + address +"</li><li>Products: " + name +"</li><li>Open hours: " + time +"</li>");
-			$("#markets").append(list);
-			//draw radar chart
-			var margin = {top: 100, right: 100, bottom: 100, left: 100},
-				width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
-				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
-			var color = d3.scale.category10();
-				
-			var radarChartOptions = {
-			  w: width,
-			  h: height,
-			  margin: margin,
-			  maxValue: 0.5,
-			  levels: 5,
-			  roundStrokes: true,
-			  color: color
-			};
-			var data = [
-						{axis:"distance",value:evalDist(distance)},
-						{axis:"food category",value:evalCate(products)},
-						{axis:"open hours",value:evalHour(time)}		
-					];
-			//Call function to draw the Radar chart
-			RadarChart(".radarChart", data, radarChartOptions);
-		}
-		//evaluation distance
-		function evalDist() {
-			//to be implemented
-		}
-		//evaluation of food categories
-		function evalCate() {
-			//to be implemented	
-		}
-		//evaluation of open hours
-		function evalHour() {
-			//to be implemented
 		}
 
 		
